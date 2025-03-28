@@ -1,4 +1,4 @@
-package com.gwi.kafka.producer.entities;
+package com.gwi.kafka.producer.book.order.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

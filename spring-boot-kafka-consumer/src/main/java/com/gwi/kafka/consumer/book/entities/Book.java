@@ -1,4 +1,4 @@
-package com.gwi.kafka.consumer.entities;
+package com.gwi.kafka.consumer.book.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Entity
-@Table(schema = "book-shop", name = "book")
+@Table(schema = "book-shop", name = "book", uniqueConstraints = { })
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -39,7 +39,7 @@ public class Book implements Serializable {
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Column(name = "isbn", nullable = false)
+    @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
 
     @Column(name = "description")

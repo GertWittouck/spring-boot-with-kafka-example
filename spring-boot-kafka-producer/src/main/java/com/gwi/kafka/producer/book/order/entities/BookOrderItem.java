@@ -1,4 +1,4 @@
-package com.gwi.kafka.producer.entities;
+package com.gwi.kafka.producer.book.order.entities;
 
 import com.gwi.kafka.producer.constants.BookCategory;
 import jakarta.persistence.Column;
@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package com.gwi.kafka.consumer.entities;
+package com.gwi.kafka.consumer.invoice.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 import static java.math.BigDecimal.ZERO;

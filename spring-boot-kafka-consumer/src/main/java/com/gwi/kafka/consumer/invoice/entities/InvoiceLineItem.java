@@ -1,5 +1,6 @@
-package com.gwi.kafka.consumer.entities;
+package com.gwi.kafka.consumer.invoice.entities;
 
+import com.gwi.kafka.consumer.book.entities.Book;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

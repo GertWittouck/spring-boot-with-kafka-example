@@ -36,6 +36,7 @@ No version has been added here as it will be inherited from the Spring Boot pare
 
 ## Project ideas
 
+```
 Controller 
     -> create book order 
     -> persist book order into book-shop dB
@@ -45,3 +46,9 @@ Controller
     -> persist book into book-shop dB
     -> create invoice
     -> persist invoice into book-shop dB
+```
+
+### References
+[integrate kafka in a spring boot application](https://medium.com/@abhishekranjandev/a-comprehensive-guide-to-integrating-kafka-in-a-spring-boot-application-a4b912aee62e)
+
+
