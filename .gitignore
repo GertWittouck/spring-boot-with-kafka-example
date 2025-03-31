@@ -5,3 +5,4 @@ spring-boot-kafka-parent.iml
 /spring-boot-kafka-consumer/spring-boot-kafka-consumer.iml
 /spring-boot-kafka-producer/target/
 /spring-boot-kafka-producer/spring-boot-kafka-producer.iml
+/spring-boot-kafka-common/target/
