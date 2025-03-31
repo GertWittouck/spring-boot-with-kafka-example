@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_UP;
+import static java.util.Optional.ofNullable;
 
 @Entity
 @Table(schema = "book-shop", name = "invoice")
@@ -47,4 +49,24 @@ public class Invoice implements Serializable {
     private BigDecimal tax = ZERO.setScale(2, HALF_UP);
     @Column(name = "price", nullable = false)
     private BigDecimal priceAfterTax = ZERO.setScale(2, HALF_UP);
+
+    public Invoice withItems(List<InvoiceLineItem> invoiceLineItems) {
+        if (CollectionUtils.isEmpty(invoiceLineItems)) {
+            this.invoiceLineItems = List.of();
+            return this;
+        }
+
+        this.invoiceLineItems = List.copyOf(invoiceLineItems);
+        return this;
+    }
+
+    public Invoice withPriceBeforeTax(BigDecimal totalPriceBeforeTax) {
+        this.priceBeforeTax = ofNullable(totalPriceBeforeTax).orElse(ZERO.setScale(2, HALF_UP));
+        return this;
+    }
+
+    public Invoice withPriceAfterTax(BigDecimal totalPriceAfterTax) {
+        this.priceAfterTax = ofNullable(totalPriceAfterTax).orElse(ZERO.setScale(2, HALF_UP));
+        return this;
+    }
 }

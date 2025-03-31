@@ -22,8 +22,9 @@
     </properties>
 
     <modules>
-	<module>spring-boot-kafka-producer</module>
-	<module>spring-boot-kafka-consumer</module>
+        <module>spring-boot-kafka-common</module>
+	    <module>spring-boot-kafka-producer</module>
+	    <module>spring-boot-kafka-consumer</module>
     </modules>
 
     <dependencies>

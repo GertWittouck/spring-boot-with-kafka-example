@@ -6,11 +6,15 @@ import com.gwi.kafka.producer.book.order.entities.BookOrderItem;
 import com.gwi.kafka.producer.book.order.exceptions.BookNotFoundException;
 import com.gwi.kafka.producer.book.order.exceptions.MissingBookOrderDataException;
 import com.gwi.kafka.producer.book.order.exceptions.NoBookOrderItemsException;
-import com.gwi.kafka.producer.book.order.model.BookOrderDto;
-import com.gwi.kafka.producer.book.order.model.BookOrderItemDto;
+import com.gwi.kafka.messages.BookOrderDto;
+import com.gwi.kafka.messages.BookOrderItemDto;
 import com.gwi.kafka.producer.book.order.model.Books;
 import com.gwi.kafka.producer.book.order.repository.BookOrderRepository;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,22 +25,27 @@ import static java.util.Optional.ofNullable;
 @Service
 public class BookOrderServiceImpl implements BookOrderService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookOrderServiceImpl.class);
+
     private final WebClient bookServiceWebClient;
     private final BookOrderRepository bookOrderRepository;
+    private final MessageProducer<BookOrderDto> messageProducer;
 
-    public BookOrderServiceImpl(@Qualifier("bookServiceWebClient") WebClient bookServiceWebClient, BookOrderRepository bookOrderRepository) {
+    @Value("${book.order.placed.topic}")
+    private String bookOrderPlacedTopic;
+
+    public BookOrderServiceImpl(
+            @Qualifier("bookServiceWebClient") WebClient bookServiceWebClient,
+            BookOrderRepository bookOrderRepository,
+            MessageProducer<BookOrderDto> messageProducer) {
         this.bookServiceWebClient = bookServiceWebClient;
         this.bookOrderRepository = bookOrderRepository;
+        this.messageProducer = messageProducer;
     }
 
     @Override
+    @Transactional
     public BookOrder placeOrder(BookOrderDto bookOrder) {
-        /*
-            1. Create book order -- DONE
-            2. Persist in database -- DONE
-            3. Produce message indicating order is placed -- TODO
-         */
-
         if (ofNullable(bookOrder).isEmpty()) {
             throw new MissingBookOrderDataException(LocalDateTime.now());
         }
@@ -52,7 +61,13 @@ public class BookOrderServiceImpl implements BookOrderService {
                 .map(orderItemDto -> convertBookOrderItemDto(orderItemDto, bookOrderToPlace))
                 .toList();
 
-        return bookOrderRepository.save(bookOrderToPlace.withBookOrderItems(bookOrderItems));
+        BookOrder placedBookOrder = bookOrderRepository.save(bookOrderToPlace.withBookOrderItems(bookOrderItems));
+        LOGGER.info("Placed the order {} at {}", placedBookOrder, LocalDateTime.now());
+
+        // Produce message indicating order has been placed and invoice should be created
+        messageProducer.sendMessage(bookOrderPlacedTopic, bookOrder);
+
+        return placedBookOrder;
     }
 
     private BookOrderItem convertBookOrderItemDto(BookOrderItemDto bookOrderItemDto, BookOrder bookOrder) {

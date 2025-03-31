@@ -1,7 +1,7 @@
 package com.gwi.kafka.producer.book.order.resource;
 
-import com.gwi.kafka.producer.book.order.model.BookOrderDto;
-import com.gwi.kafka.producer.book.order.model.BookOrderItemDto;
+import com.gwi.kafka.messages.BookOrderDto;
+import com.gwi.kafka.messages.BookOrderItemDto;
 import com.gwi.kafka.producer.book.order.resource.model.BookOrderItemRequest;
 import com.gwi.kafka.producer.book.order.resource.model.BookOrderRequest;
 import com.gwi.kafka.producer.book.order.resource.model.BookOrderResponse;

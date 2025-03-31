@@ -1,0 +1,85 @@
+{
+	"info": {
+		"_postman_id": "0ee32940-5383-4059-8f97-e42d7158027d",
+		"name": "Apache Kafka Example Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24039638"
+	},
+	"item": [
+		{
+			"name": "Get All Books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{basePathConsumer}}/api/v1/book",
+					"host": [
+						"{{basePathConsumer}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new book",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Domain-Driven Design\",\n    \"author\": \"Eric Evans\",\n    \"isbn\": \"978-0-321-12521-7\",\n    \"priceBeforeTax\": \"74.99\",\n    \"description\": \"Tackling Complexity in the heart of Software\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basePathConsumer}}/api/v1/book",
+					"host": [
+						"{{basePathConsumer}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Place order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookOrderItems\": [{\n        \"isbn\": \"978-1-098-11873-0\",\n        \"quantity\": 2\n    },{\n        \"isbn\": \"978-1-491-95177-4\",\n        \"quantity\": 1\n    },{\n        \"isbn\": \"Domain-Driven Design\",\n        \"quantity\": 5\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basePathProducer}}/api/v1/book-order",
+					"host": [
+						"{{basePathProducer}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"book-order"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
