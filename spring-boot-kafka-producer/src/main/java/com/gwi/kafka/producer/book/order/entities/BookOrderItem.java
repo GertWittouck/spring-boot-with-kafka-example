@@ -1,6 +1,6 @@
 package com.gwi.kafka.producer.book.order.entities;
 
-import com.gwi.kafka.producer.constants.BookCategory;
+import com.gwi.kafka.producer.book.order.constants.BookCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -45,8 +45,9 @@ public class BookOrderItem implements Serializable {
     private BookCategory category;
     @Column(name = "description")
     private String note;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
     @ManyToOne
     @JoinColumn(name = "book_order_id")
     private BookOrder bookOrder;
-
 }

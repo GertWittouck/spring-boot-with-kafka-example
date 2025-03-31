@@ -1,12 +1,12 @@
-package com.gwi.kafka.producer.book.order.resource.model;
+package com.gwi.kafka.producer.book.order.model;
 
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
-public record BookOrderRequest(List<BookOrderItemRequest> bookOrderItems) {
+public record BookOrderDto(List<BookOrderItemDto> bookOrderItems) {
 
-    public List<BookOrderItemRequest> bookOrderItems() {
+    public List<BookOrderItemDto> bookOrderItems() {
         if (CollectionUtils.isEmpty(bookOrderItems)) {
             return List.of();
         }

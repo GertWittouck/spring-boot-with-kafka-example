@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -38,5 +39,15 @@ public class BookOrder implements Serializable {
 
     public List<BookOrderItem> getBookOrderItems() {
         return List.copyOf(bookOrderItems);
+    }
+
+    public BookOrder withBookOrderItems(List<BookOrderItem> bookOrderItems) {
+        if (CollectionUtils.isEmpty(bookOrderItems)) {
+            this.bookOrderItems = List.of();
+            return this;
+        }
+
+        this.bookOrderItems = List.copyOf(bookOrderItems);
+        return this;
     }
 }
