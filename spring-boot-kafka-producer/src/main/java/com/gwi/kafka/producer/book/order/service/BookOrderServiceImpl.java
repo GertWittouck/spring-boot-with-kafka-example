@@ -6,8 +6,8 @@ import com.gwi.kafka.producer.book.order.entities.BookOrderItem;
 import com.gwi.kafka.producer.book.order.exceptions.BookNotFoundException;
 import com.gwi.kafka.producer.book.order.exceptions.MissingBookOrderDataException;
 import com.gwi.kafka.producer.book.order.exceptions.NoBookOrderItemsException;
-import com.gwi.kafka.messages.BookOrderDto;
-import com.gwi.kafka.messages.BookOrderItemDto;
+import com.gwi.kafka.messages.BookOrderMessage;
+import com.gwi.kafka.messages.BookOrderItemMessage;
 import com.gwi.kafka.producer.book.order.model.Books;
 import com.gwi.kafka.producer.book.order.repository.BookOrderRepository;
 import jakarta.transaction.Transactional;
@@ -29,7 +29,7 @@ public class BookOrderServiceImpl implements BookOrderService {
 
     private final WebClient bookServiceWebClient;
     private final BookOrderRepository bookOrderRepository;
-    private final MessageProducer<BookOrderDto> messageProducer;
+    private final MessageProducer<BookOrderMessage> messageProducer;
 
     @Value("${book.order.placed.topic}")
     private String bookOrderPlacedTopic;
@@ -37,7 +37,7 @@ public class BookOrderServiceImpl implements BookOrderService {
     public BookOrderServiceImpl(
             @Qualifier("bookServiceWebClient") WebClient bookServiceWebClient,
             BookOrderRepository bookOrderRepository,
-            MessageProducer<BookOrderDto> messageProducer) {
+            MessageProducer<BookOrderMessage> messageProducer) {
         this.bookServiceWebClient = bookServiceWebClient;
         this.bookOrderRepository = bookOrderRepository;
         this.messageProducer = messageProducer;
@@ -45,7 +45,7 @@ public class BookOrderServiceImpl implements BookOrderService {
 
     @Override
     @Transactional
-    public BookOrder placeOrder(BookOrderDto bookOrder) {
+    public BookOrder placeOrder(BookOrderMessage bookOrder) {
         if (ofNullable(bookOrder).isEmpty()) {
             throw new MissingBookOrderDataException(LocalDateTime.now());
         }
@@ -70,22 +70,22 @@ public class BookOrderServiceImpl implements BookOrderService {
         return placedBookOrder;
     }
 
-    private BookOrderItem convertBookOrderItemDto(BookOrderItemDto bookOrderItemDto, BookOrder bookOrder) {
+    private BookOrderItem convertBookOrderItemDto(BookOrderItemMessage bookOrderItemMessage, BookOrder bookOrder) {
         // Find book - if not found, throw an exception indication book is not in stock
         var books = bookServiceWebClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path("/book")
-                                .pathSegment(bookOrderItemDto.isbn())
+                                .pathSegment(bookOrderItemMessage.isbn())
                                 .build())
                 .retrieve()
                 .bodyToMono(Books.class)
-                .onErrorMap(BookNotFoundException.class, exception -> new BookNotFoundException(bookOrderItemDto.isbn()))
+                .onErrorMap(BookNotFoundException.class, exception -> new BookNotFoundException(bookOrderItemMessage.isbn()))
                 .block();
 
         // If response isn't returning a single book throw an exception
         if (books == null || books.books().size() != 1) {
-            throw new BookNotFoundException(bookOrderItemDto.isbn());
+            throw new BookNotFoundException(bookOrderItemMessage.isbn());
         }
 
         var book = books.books().iterator().next();
@@ -96,7 +96,7 @@ public class BookOrderServiceImpl implements BookOrderService {
                 .isbn(book.isbn())
                 .category(BookCategory.UNKNOWN)
                 .note(book.description())
-                .quantity(bookOrderItemDto.quantity())
+                .quantity(bookOrderItemMessage.quantity())
                 .build();
     }
 }

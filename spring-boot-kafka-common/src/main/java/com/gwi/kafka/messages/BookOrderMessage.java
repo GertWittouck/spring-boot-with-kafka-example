@@ -5,9 +5,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
-public record BookOrderDto(@JsonProperty("bookOrderItems") List<BookOrderItemDto> bookOrderItems) {
+public record BookOrderMessage(@JsonProperty("bookOrderItems") List<BookOrderItemMessage> bookOrderItems) {
 
-    public List<BookOrderItemDto> bookOrderItems() {
+    public List<BookOrderItemMessage> bookOrderItems() {
         if (CollectionUtils.isEmpty(bookOrderItems)) {
             return List.of();
         }

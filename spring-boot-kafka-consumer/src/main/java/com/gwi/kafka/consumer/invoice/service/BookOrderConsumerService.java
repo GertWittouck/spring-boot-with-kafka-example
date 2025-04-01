@@ -6,7 +6,7 @@ import com.gwi.kafka.consumer.book.service.BookService;
 import com.gwi.kafka.consumer.invoice.book.order.BookOrder;
 import com.gwi.kafka.consumer.invoice.book.order.BookOrderItem;
 import com.gwi.kafka.consumer.invoice.entities.Invoice;
-import com.gwi.kafka.messages.BookOrderDto;
+import com.gwi.kafka.messages.BookOrderMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,7 +16,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @Service
-public class BookOrderConsumerService implements MessageConsumer<BookOrderDto, Invoice> {
+public class BookOrderConsumerService implements MessageConsumer<BookOrderMessage, Invoice> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookOrderConsumerService.class);
 
@@ -30,13 +30,13 @@ public class BookOrderConsumerService implements MessageConsumer<BookOrderDto, I
 
     @Override
     @KafkaListener(topics = "${book.order.placed.topic}", groupId = "${book.order.placed.group-id}")
-    public Invoice consume(BookOrderDto bookOrderDto) {
-        if (CollectionUtils.isEmpty(bookOrderDto.bookOrderItems())) {
+    public Invoice consume(BookOrderMessage bookOrderMessage) {
+        if (CollectionUtils.isEmpty(bookOrderMessage.bookOrderItems())) {
             LOGGER.warn("No book order items where found");
             return invoiceService.invoice(new BookOrder(List.of()));
         }
 
-        var bookOrderItems = bookOrderDto.bookOrderItems().stream()
+        var bookOrderItems = bookOrderMessage.bookOrderItems().stream()
                 .map(message -> BookOrderItem.of(book(message.isbn()), message.quantity()))
                 .toList();
 

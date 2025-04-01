@@ -1,7 +1,7 @@
 package com.gwi.kafka.producer.book.order.resource;
 
-import com.gwi.kafka.messages.BookOrderDto;
-import com.gwi.kafka.messages.BookOrderItemDto;
+import com.gwi.kafka.messages.BookOrderMessage;
+import com.gwi.kafka.messages.BookOrderItemMessage;
 import com.gwi.kafka.producer.book.order.resource.model.BookOrderItemRequest;
 import com.gwi.kafka.producer.book.order.resource.model.BookOrderRequest;
 import com.gwi.kafka.producer.book.order.resource.model.BookOrderResponse;
@@ -37,16 +37,16 @@ public class BookOrderResource {
         return ResponseEntity.ok().body(BookOrderResponse.of(bookOrder));
     }
 
-    private Function<BookOrderRequest, BookOrderDto> convertBookOrderRequest() {
-        return request -> new BookOrderDto(
+    private Function<BookOrderRequest, BookOrderMessage> convertBookOrderRequest() {
+        return request -> new BookOrderMessage(
                 request.bookOrderItems().stream()
                         .map(item -> convertBookOrderItem().apply(item))
                         .toList()
         );
     }
 
-    private Function<BookOrderItemRequest, BookOrderItemDto> convertBookOrderItem() {
-        return bookOrderItemRequest -> new BookOrderItemDto(
+    private Function<BookOrderItemRequest, BookOrderItemMessage> convertBookOrderItem() {
+        return bookOrderItemRequest -> new BookOrderItemMessage(
                 bookOrderItemRequest.isbn(),
                 bookOrderItemRequest.quantity()
         );
