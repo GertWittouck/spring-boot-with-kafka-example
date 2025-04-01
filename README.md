@@ -33,6 +33,26 @@ To get started, add the following dependencies to your [pom.xml](pom.xml):
 ```
 No version has been added here as it will be inherited from the Spring Boot parent (3.4.3) in our case.
 
+## PostgreSQL
+This project makes use of [PostgreSQL](https://www.postgresql.org/). To download and install it click [here](https://www.postgresql.org/download/).
+
+The current setup used in the project is:
+* port = 5432 (default)
+* username=postgres (to be setup during installation - change if needed)
+* password=***** (use the password you setup during installation)
+
+Once you have your database up and running, create a new scheme called `book-shop`:
+
+```
+-- SCHEMA: book-shop
+
+-- DROP SCHEMA IF EXISTS "book-shop" ;
+
+CREATE SCHEMA IF NOT EXISTS "book-shop"
+    AUTHORIZATION postgres;
+```
+
+The scheme tables will be created by SpringBoot during the first starup of the application.
 
 ## Project ideas
 
